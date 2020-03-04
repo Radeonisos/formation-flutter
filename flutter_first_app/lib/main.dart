@@ -12,7 +12,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Text('Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("My First App"),
+        ),
+        body: Text('This is my default text!'),
+      ),
     );
   }
 }
