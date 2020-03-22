@@ -4,13 +4,14 @@ import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> userTransactions;
+  final Function deleteTx;
 
-  TransactionList(this.userTransactions);
+  TransactionList(this.userTransactions, this.deleteTx);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 300,
+        height: 493,
         child: userTransactions.isEmpty
             ? Column(
                 children: <Widget>[
@@ -34,6 +35,39 @@ class TransactionList extends StatelessWidget {
                 itemCount: userTransactions.length,
                 itemBuilder: (ctx, key) {
                   return Card(
+                    elevation: 5,
+                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 30,
+                        child: Padding(
+                          padding: EdgeInsets.all(6),
+                          child: FittedBox(
+                            child: Text(
+                              "${userTransactions[key].amount.toStringAsFixed(2)} €",
+                            ),
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        userTransactions[key].title,
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                      subtitle: Text(DateFormat('dd MMMM yyyy', 'fr_FR')
+                          .format(userTransactions[key].dateTime)),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        color: Theme.of(context).errorColor,
+                        onPressed: () => deleteTx(userTransactions[key].id),
+                      ),
+                    ),
+                  );
+                },
+              ));
+  }
+}
+/*
+return Card(
                     child: Row(
                       children: <Widget>[
                         Container(
@@ -70,7 +104,4 @@ class TransactionList extends StatelessWidget {
                       ],
                     ),
                   );
-                },
-              ));
-  }
-}
+ */

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_section_4/widgets/chart.dart';
 import 'package:flutter_app_section_4/widgets/newTransaction.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 import 'models/transaction.dart';
 import 'widgets/transactionList.dart';
@@ -9,27 +11,32 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
-    initializeDateFormatting('fr_FR', null);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Dépenses",
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          accentColor: Colors.amber,
-          fontFamily: 'Quicksand',
+        primarySwatch: Colors.blue,
+        accentColor: Colors.lightGreen,
+        fontFamily: 'Quicksand',
+        errorColor: Colors.red,
+        textTheme: ThemeData.light().textTheme.copyWith(
+            title: TextStyle(
+                fontFamily: 'OpenSans',
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
+            button: TextStyle(color: Colors.white)),
+        appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
-              title: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
-          appBarTheme: AppBarTheme(
-              textTheme: ThemeData.light().textTheme.copyWith(
-                  title: TextStyle(
-                      fontFamily: 'OpenSans',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold)))),
+                title: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+        ),
+      ),
       home: MyHomePage(),
     );
   }
@@ -41,16 +48,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    Intl.defaultLocale = 'fr_FR';
+    initializeDateFormatting('fr', null);
+  }
+
   final List<Transaction> _userTransactions = [];
 
-  void _addNewTransaction(String title, double amount) {
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.dateTime.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
+
+  void _addNewTransaction(String title, double amount, DateTime chosenDate) {
     final newTxt = Transaction(
         title: title,
         amount: amount,
-        dateTime: DateTime.now(),
+        dateTime: chosenDate,
         id: DateTime.now().toString());
     setState(() {
       _userTransactions.add(newTxt);
+    });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((transac) {
+        return transac.id == id;
+      });
     });
   }
 
@@ -77,15 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Container(
-            width: double.infinity,
-            child: Card(
-              color: Colors.blue,
-              child: Text("CHART!!"),
-              elevation: 5.0,
-            ),
-          ),
-          TransactionList(_userTransactions)
+          Chart(_recentTransactions),
+          TransactionList(_userTransactions, _deleteTransaction)
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
