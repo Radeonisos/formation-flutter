@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_app_section_4/widgets/transactionItem.dart';
 
 import '../models/transaction.dart';
 
@@ -35,40 +35,8 @@ class TransactionList extends StatelessWidget {
         : ListView.builder(
             itemCount: userTransactions.length,
             itemBuilder: (ctx, key) {
-              return Card(
-                elevation: 5,
-                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    child: Padding(
-                      padding: EdgeInsets.all(6),
-                      child: FittedBox(
-                        child: Text(
-                          "${userTransactions[key].amount.toStringAsFixed(2)} €",
-                        ),
-                      ),
-                    ),
-                  ),
-                  title: Text(
-                    userTransactions[key].title,
-                    style: Theme.of(context).textTheme.title,
-                  ),
-                  subtitle: Text(DateFormat('dd MMMM yyyy', 'fr_FR')
-                      .format(userTransactions[key].dateTime)),
-                  trailing: MediaQuery.of(context).size.width > 460
-                      ? FlatButton.icon(
-                          textColor: Theme.of(context).errorColor,
-                          onPressed: () => deleteTx(userTransactions[key].id),
-                          icon: Icon(Icons.delete),
-                          label: Text('Supprimer'))
-                      : IconButton(
-                          icon: Icon(Icons.delete),
-                          color: Theme.of(context).errorColor,
-                          onPressed: () => deleteTx(userTransactions[key].id),
-                        ),
-                ),
-              );
+              return TransactionItem(
+                  userTransaction: userTransactions[key], deleteTx: deleteTx);
             },
           );
   }
