@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttersection812shopapp/providers/auth.dart';
 import 'package:fluttersection812shopapp/providers/cart.dart';
 import 'package:fluttersection812shopapp/providers/product.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,8 @@ class ProductItem extends StatelessWidget {
 
     final cart = Provider.of<Cart>(context, listen: false);
 
+    final authData = Provider.of<Auth>(context, listen: false);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -20,9 +23,14 @@ class ProductItem extends StatelessWidget {
               Navigator.of(context).pushNamed(ProductDetailsScreen.routeName,
                   arguments: productData.id);
             },
-            child: Image.network(
-              productData.imageUrl,
-              fit: BoxFit.cover,
+            child: Hero(
+              tag: productData.id,
+              child: FadeInImage(
+                placeholder:
+                    AssetImage('assets/images/product-placeholder.png'),
+                image: NetworkImage(productData.imageUrl),
+                fit: BoxFit.cover,
+              ),
             )),
         footer: GridTileBar(
           backgroundColor: Colors.black87,
@@ -32,7 +40,8 @@ class ProductItem extends StatelessWidget {
                         ? Icons.favorite
                         : Icons.favorite_border),
                     onPressed: () {
-                      product.toogleFavoriteStatus();
+                      product.toogleFavoriteStatus(
+                          authData.token, authData.userId);
                     },
                     color: Theme.of(context).accentColor,
                   )),

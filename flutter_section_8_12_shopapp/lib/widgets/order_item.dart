@@ -36,29 +36,31 @@ class _OrderItemState extends State<OrderItem> {
               },
             ),
           ),
-          if (_expanded)
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-              height: min(widget.order.products.length * 20.0 + 10, 100),
-              child: ListView(
-                children: widget.order.products
-                    .map((product) => Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              product.title,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              '${product.quantity} x ${product.price} €',
-                              style: TextStyle(fontSize: 18),
-                            )
-                          ],
-                        ))
-                    .toList(),
-              ),
-            )
+          AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+            height: _expanded
+                ? min(widget.order.products.length * 20.0 + 20, 100)
+                : 0,
+            child: ListView(
+              children: widget.order.products
+                  .map((product) => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            product.title,
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '${product.quantity} x ${product.price} €',
+                            style: TextStyle(fontSize: 18),
+                          )
+                        ],
+                      ))
+                  .toList(),
+            ),
+          )
         ],
       ),
     );

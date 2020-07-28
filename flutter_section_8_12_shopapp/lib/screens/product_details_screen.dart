@@ -13,38 +13,48 @@ class ProductDetailsScreen extends StatelessWidget {
         .findById(productId);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(productData.title),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 300,
-              width: double.infinity,
-              child: Image.network(
-                productData.imageUrl,
-                fit: BoxFit.cover,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(productData.title),
+              background: Hero(
+                tag: productData.id,
+                child: Image.network(
+                  productData.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            SizedBox(height: 10),
-            Text(
-              '${productData.price} €',
-              style: TextStyle(color: Colors.grey, fontSize: 20),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              SizedBox(height: 10),
+              Text(
+                '${productData.price} €',
+                style: TextStyle(color: Colors.grey, fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
                 padding: EdgeInsets.all(10),
                 width: double.infinity,
                 child: Text(
                   productData.description,
                   textAlign: TextAlign.center,
                   softWrap: true,
-                ))
-          ],
-        ),
+                ),
+              ),
+              SizedBox(
+                height: 800,
+              )
+            ]),
+          )
+        ],
       ),
     );
   }

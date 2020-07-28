@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttersection812shopapp/screens/orders_screen.dart';
 import 'package:fluttersection812shopapp/screens/user_product_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -26,6 +29,8 @@ class AppDrawer extends StatelessWidget {
             title: Text('Commandes'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(OrderScreen.routeName);
+//              Navigator.of(context).pushReplacement(
+//                  CustomRoute(builder: (ctx) => OrderScreen()));
             },
           ),
           Divider(),
@@ -35,6 +40,16 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context)
                   .pushReplacementNamed(UserProductScreen.routeName);
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Déconnexion'),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('/');
+              Provider.of<Auth>(context, listen: false).logout();
             },
           ),
         ],
